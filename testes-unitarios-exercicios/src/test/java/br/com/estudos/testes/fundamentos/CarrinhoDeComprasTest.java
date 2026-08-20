@@ -2,8 +2,13 @@ package br.com.estudos.testes.fundamentos;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import br.com.estudos.testes.fundamentos.CarrinhoDeCompras.Item;  
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;        
+import static org.junit.jupiter.api.Assertions.assertThrows;      
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * ======================================================================
@@ -26,45 +31,99 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 class CarrinhoDeComprasTest {
 
-    // TODO: campo carrinho + metodo @BeforeEach
+    private CarrinhoDeCompras  carrinho;
+    @BeforeEach
+    void prepararCarrinhoLimpo(){
+        carrinho = new CarrinhoDeCompras();
+
+    }
 
     @Test
     @DisplayName("2.1 - carrinho recem-criado esta vazio e com total zero")
     void carrinhoNovoDeveEstarVazio() {
-        // TODO
-        // Dica: assertTrue(...), assertEquals(0.0, ..., 0.001)
-        fail("TODO: implementar este teste");
+        assertTrue(carrinho.estaVazio());
+        assertEquals(0, carrinho.quantidadeDeItens());
+        assertEquals(0.0, carrinho.total(), 0.001);
+        
+
     }
 
     @Test
     @DisplayName("2.2 - ao adicionar 2 camisas de 199,90 o total e 399,80")
     void deveSomarPrecoVezesQuantidade() {
-        // TODO
-        // Dica: new CarrinhoDeCompras.Item("camisa", 199.90, 2)
-        fail("TODO: implementar este teste");
+        //arrange
+        Item camisa = new Item("camisa", 199.90, 2);
+        //act
+        carrinho.adicionar(camisa);
+        //assert
+        assertEquals(399.80,carrinho.total(), 0.001);
     }
 
     @Test
     @DisplayName("2.3 - remover um item que existe devolve true e tira o item do carrinho")
     void deveRemoverItemExistente() {
-        // TODO
-        // Verifique DUAS coisas: o retorno true E o estado do carrinho depois.
-        fail("TODO: implementar este teste");
+        //arrange
+        Item camisa = new Item("camisa polo",200,1);
+        carrinho.adicionar(camisa);
+        //act
+         boolean removido = carrinho.remover("camisa polo");
+
+        //assert
+        assertTrue(removido);
+        assertTrue(carrinho.estaVazio());
+        assertEquals(0,carrinho.quantidadeDeItens());
     }
 
     @Test
     @DisplayName("2.4 - remover um item que nao existe devolve false e nao mexe no carrinho")
     void deveIgnorarRemocaoDeItemInexistente() {
-        // TODO
-        // Repare: aqui NAO ha excecao. O caminho "triste" tambem e um valor de retorno.
-        fail("TODO: implementar este teste");
+        //arrange
+        Item camisa = new Item("camisa polo",200,1);
+        carrinho.adicionar(camisa);
+        //act
+         boolean removido = carrinho.remover("camisa regata");
+         //assert
+         assertFalse(removido);
+            assertFalse(carrinho.estaVazio());
+            assertEquals(1,carrinho.quantidadeDeItens());
+        
     }
 
     @Test
     @DisplayName("2.5 - adicionar item nulo lanca IllegalArgumentException")
     void deveRecusarItemNulo() {
-        // TODO
-        fail("TODO: implementar este teste");
+        //arrange
+        Item itemNulo = null;
+        //act
+        var erro = assertThrows(
+            IllegalArgumentException.class, 
+            () -> carrinho.adicionar(itemNulo)
+        );
+        //assert
+        assertEquals("item nao pode ser nulo", erro.getMessage());
+        
+
+    }
+
+        @Test
+    @DisplayName("teste o limite de 20 itens. Use um laco para adicionar 20 itens com nomes diferentes e verifique o que o 21o lanca IllegalStateException.")
+    void deveRecusar21Item() {
+        //arrange
+        Item primeiroItem = new Item("item 1", 10, 1);
+                //act
+       var erro = assertThrows(
+            IllegalStateException.class,
+            () -> {
+                for (int i = 1; i <= 20; i++) {
+                    carrinho.adicionar(primeiroItem);
+                }
+                carrinho.adicionar(primeiroItem);
+            }
+        );
+        //assert
+        assertEquals("carrinho cheio: limite de " + CarrinhoDeCompras.LIMITE_DE_ITENS + " itens", erro.getMessage());
+        
+
     }
 
     // ------------------------------------------------------------------

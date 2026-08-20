@@ -21,10 +21,10 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final NotificadorDeEmail notificadorDeEmail;
 
-    public ClienteService(ClienteRepository clienteRepository, NotificadorDeEmail notificadorDeEmail) {
-        this.clienteRepository = clienteRepository;
-        this.notificadorDeEmail = notificadorDeEmail;
-    }
+public ClienteService(ClienteRepository clienteRepository, NotificadorDeEmail notificadorDeEmail) {
+this.clienteRepository = clienteRepository;
+this.notificadorDeEmail = notificadorDeEmail;
+}
 
     /**
      * EXERCICIO 3
